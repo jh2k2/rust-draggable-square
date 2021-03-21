@@ -10,4 +10,5 @@ piston2d-opengl_graphics = "0.77.0"
 
 To run:
 ```cargo build
-cargo run```
+cargo run
+```
