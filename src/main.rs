@@ -72,15 +72,15 @@ fn main() {
     };
 
     let mut cursor = [0.0, 0.0];
-    let mut past_cursor = [0.0, 0.0];
     let mut events = Events::new(EventSettings::new());
     let mut held = false;
+    let mut pos_diff = [0.0, 0.0];
 
     while let Some(e) = events.next(&mut window) {
         if let Some(Button::Mouse(button)) = e.press_args() {
             let distance =((app.get_coord()[0] - cursor[0]).powi(2) + (app.get_coord()[1]-cursor[1]).powi(2)).sqrt().abs();
             if button == MouseButton::Left && distance < 50.0 {
-                println!("{:?}", app.get_coord());
+                pos_diff = [app.get_coord()[0] - cursor[0], app.get_coord()[1]-cursor[1]];
                 held = true;
             }
         }
@@ -100,13 +100,11 @@ fn main() {
         }
 
         e.mouse_cursor(|pos| {
-            past_cursor = cursor;
             cursor = pos;
         });
 
         if held {
-            let coord = app.get_coord();
-            app.drag([(cursor[0]-past_cursor[0]) + coord[0], (cursor[1]-past_cursor[1]) + coord[1]]);
+            app.drag([cursor[0] + pos_diff[0], cursor[1] + pos_diff[1]]);
         }
     }
 }
